@@ -1,0 +1,136 @@
+//#include "stdafx.h"
+
+#include <iostream>  
+#include <io.h>  
+#include <string>  
+#include <vector>  
+#include <numeric>
+#include <opencv2\opencv.hpp>
+using namespace std;
+using namespace cv;
+
+void getFiles(const std::string& path, std::vector<std::string>& files)
+{
+	//文件句柄  
+	intptr_t hFile = 0;
+	//文件信息，_finddata_t需要io.h头文件  
+	struct _finddata_t fileinfo;
+	std::string p;
+	if ((hFile = _findfirst(p.assign(path).append("\\*").c_str(), &fileinfo)) != -1)
+	{
+		do
+		{
+			//如果是目录,迭代之  
+			//如果不是,加入列表  
+			if ((fileinfo.attrib & _A_SUBDIR))
+			{
+				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)
+					getFiles(p.assign(path).append("\\").append(fileinfo.name), files);
+			}
+			else
+			{
+				files.push_back(p.assign(path).append("\\").append(fileinfo.name));
+			}
+		} while (_findnext(hFile, &fileinfo) == 0);
+		_findclose(hFile);
+	}
+}
+
+int main()
+{
+	vector<std::string> filenames;//用来存储文件名
+	string path = "D:\\资料\\科研\\A硕士研究生\\A项目-毫米波目标检测\\图像类\\民航_毫米波数据集";
+	//将vector转化成字符串，便于查找局部关键字
+	string name;
+	int wenjianjia = 1;
+	int wenjianming = 1;
+	char buff[100];
+	getFiles(path, filenames);
+	int flag = 0;
+	for (auto file:filenames)
+	{
+		//sprintf_s(buff, "C:\\MWDetec\\Airport\\front\\%d\\%d.bmp",wenjianjia,wenjianming);
+		sprintf_s(buff, "C:\\MWDetec\\Airport\\front\\CompanyResult_model\\%d.bmp",  wenjianming);
+		string temp(buff);
+		string::size_type position;
+		position = file.find("正面_10_人偶图像.bmp");
+		if (position != file.npos) {
+			Mat I = imread(file);
+			imwrite(temp, I);
+			position = file.npos;
+			flag++;
+			wenjianming++;
+		}
+		/*position = file.find("正面_2_毫米波图像.bmp");
+		if (position != file.npos) {
+			Mat I = imread(file);
+			imwrite(temp, I);
+			position = file.npos;
+			flag++;
+			wenjianming++;
+		}
+		position = file.find("正面_3_毫米波图像.bmp");
+		if (position != file.npos) {
+			Mat I = imread(file);
+			imwrite(temp, I);
+			position = file.npos;
+			flag++;
+			wenjianming++;
+		}
+		position = file.find("正面_4_毫米波图像.bmp");
+		if (position != file.npos) {
+			Mat I = imread(file);
+			imwrite(temp, I);
+			position = file.npos;
+			flag++;
+			wenjianming++;
+		}
+		position = file.find("正面_5_毫米波图像.bmp");
+		if (position != file.npos) {
+			Mat I = imread(file);
+			imwrite(temp, I);
+			position = file.npos;
+			flag++;
+			wenjianming++;
+		}
+		position = file.find("正面_6_毫米波图像.bmp");
+		if (position != file.npos) {
+			Mat I = imread(file);
+			imwrite(temp, I);
+			position = file.npos;
+			flag++;
+			wenjianming++;
+		}
+		position = file.find("正面_7_毫米波图像.bmp");
+		if (position != file.npos) {
+			Mat I = imread(file);
+			imwrite(temp, I);
+			position = file.npos;
+			flag++;
+			wenjianming++;
+		}
+		position = file.find("正面_8_毫米波图像.bmp");
+		if (position != file.npos) {
+			Mat I = imread(file);
+			imwrite(temp, I);
+			position = file.npos;
+			flag++;
+			wenjianming++;
+		}
+		position = file.find("正面_9_毫米波图像.bmp");
+		if (position != file.npos) {
+			Mat I = imread(file);
+			imwrite(temp, I);
+			position = file.npos;
+			flag++;
+			wenjianming++;
+		}
+		if (flag == 9) {
+			wenjianjia++;
+			wenjianming = 1;
+			flag = 0;
+		}*/
+	}
+	system("pause");
+	return 0;
+}
